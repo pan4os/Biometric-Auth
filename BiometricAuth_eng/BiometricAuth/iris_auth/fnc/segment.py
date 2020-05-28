@@ -2,8 +2,8 @@
 ##  Import
 ##-----------------------------------------------------------------------------
 import numpy as np
-from fnc.boundary import searchInnerBound, searchOuterBound
-from fnc.line import findline, linecoords
+from .boundary import searchInnerBound, searchOuterBound
+from .line import findline, linecoords
 import multiprocessing as mp
 
 
@@ -28,8 +28,9 @@ def segment(eyeim, eyelashes_thres=80, use_multiprocess=True):
 	"""
 	# Find the iris boundary by Daugman's intefro-differential
 	rowp, colp, rp = searchInnerBound(eyeim)
+	print(1)
 	row, col, r = searchOuterBound(eyeim, rowp, colp, rp)
-
+	print(2)
 	# Package pupil and iris boundaries
 	rowp = np.round(rowp).astype(int)
 	colp = np.round(colp).astype(int)
@@ -39,7 +40,7 @@ def segment(eyeim, eyelashes_thres=80, use_multiprocess=True):
 	r = np.round(r).astype(int)
 	cirpupil = [rowp, colp, rp]
 	ciriris = [row, col, r]
-
+	print(3)
 	# Find top and bottom eyelid
 	imsz = eyeim.shape
 	irl = np.round(row - r).astype(int)
@@ -55,9 +56,10 @@ def segment(eyeim, eyelashes_thres=80, use_multiprocess=True):
 	if icu >= imsz[1]:
 		icu = imsz[1] - 1
 	imageiris = eyeim[irl: iru + 1, icl: icu + 1]
-
+	print(4)
 	# If use_multiprocess
 	if use_multiprocess:
+		print('\tUSE MULTIPROCESS')
 		ret_top = mp.Manager().dict()
 		ret_bot = mp.Manager().dict()
 		p_top = mp.Process(
@@ -74,12 +76,12 @@ def segment(eyeim, eyelashes_thres=80, use_multiprocess=True):
 		p_bot.join()
 		mask_top = ret_top[0]
 		mask_bot = ret_bot[0]
-
 	# If not use_multiprocess
 	else:
+		print('\tDONT USE MULTIPROCESS')
 		mask_top = findTopEyelid(imsz, imageiris, irl, icl, rowp, rp)
 		mask_bot = findBottomEyelid(imsz, imageiris, rowp, rp, irl, icl)
-
+	print(5)
 	# Mask the eye image, noise region is masked by NaN value
 	imwithnoise = eyeim.astype(float)
 	imwithnoise = imwithnoise + mask_top + mask_bot
@@ -88,7 +90,7 @@ def segment(eyeim, eyelashes_thres=80, use_multiprocess=True):
 	ref = eyeim < eyelashes_thres
 	coords = np.where(ref == 1)
 	imwithnoise[coords] = np.nan
-
+	print(6)
 	return ciriris, cirpupil, imwithnoise
 
 

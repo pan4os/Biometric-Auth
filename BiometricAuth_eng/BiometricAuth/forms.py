@@ -42,9 +42,16 @@ class IrisAuth(forms.Form):
 
 
 class IrisImagesForm(forms.ModelForm):
+    # iris_image = forms.ImageField()
+    # a = forms.CharField()
     class Meta:
         model = models.IrisImages
         fields = '__all__'
+
+    # def __init__(self, *args, **kwargs):
+    #         super().__init__(*args, **kwargs)
+
+    #         self.fields['iris_image'].widget = forms.ImageField() 
 
 
 IrisImagesFormset = inlineformset_factory(

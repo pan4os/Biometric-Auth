@@ -3,9 +3,9 @@
 ##-----------------------------------------------------------------------------
 from cv2 import imread
 
-from fnc.segment import segment
-from fnc.normalize import normalize
-from fnc.encode import encode
+from .segment import segment
+from .normalize import normalize
+from .encode import encode
 
 
 ##-----------------------------------------------------------------------------
@@ -28,7 +28,7 @@ sigmaOnf = 0.5
 ##-----------------------------------------------------------------------------
 ##  Function
 ##-----------------------------------------------------------------------------
-def extractFeature(im_filename, eyelashes_thres=80, use_multiprocess=True):
+def extractFeature(im_filename, eyelashes_thres=80, use_multiprocess=False):
 	"""
 	Description:
 		Extract features from an iris image
@@ -44,13 +44,14 @@ def extractFeature(im_filename, eyelashes_thres=80, use_multiprocess=True):
 	"""
 	# Perform segmentation
 	im = imread(im_filename, 0)
-	ciriris, cirpupil, imwithnoise = segment(im, eyelashes_thres, use_multiprocess)
-
+	print('\tTYPE: ', type(im))
+	print(im)
+	ciriris, cirpupil, imwithnoise = segment(im, eyelashes_thres, use_multiprocess=use_multiprocess)
+	print('END')
 	# Perform normalization
 	polar_array, noise_array = normalize(imwithnoise, ciriris[1], ciriris[0], ciriris[2],
 										 cirpupil[1], cirpupil[0], cirpupil[2],
 										 radial_res, angular_res)
-
 	# Perform feature encoding
 	template, mask = encode(polar_array, noise_array, minWaveLength, mult, sigmaOnf)
 

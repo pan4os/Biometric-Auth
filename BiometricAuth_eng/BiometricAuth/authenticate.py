@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from .models import UserBiometry
+from PIL import Image
 from django.contrib.auth.backends import ModelBackend
 
 

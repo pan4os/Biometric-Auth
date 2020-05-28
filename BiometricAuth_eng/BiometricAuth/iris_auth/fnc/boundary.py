@@ -106,40 +106,43 @@ def searchOuterBound(img, inner_y, inner_x, inner_r):
     """
     # Maximum displacement 15# (Daugman 2004)
     maxdispl = np.round(inner_r*0.15).astype(int)
-
+    print(11)
     # 0.1 - 0.8 (Daugman 2004)
     minrad = np.round(inner_r/0.8).astype(int)
     maxrad = np.round(inner_r/0.3).astype(int)
-
+    print(12)
     # # Hough Space (y,x,r)
     # hs = np.zeros([2*maxdispl, 2*maxdispl, maxrad-minrad])
 
     # Integration region, avoiding eyelids
     intreg = np.array([[2/6, 4/6], [8/6, 10/6]]) * np.pi
-
+    print(13)
     # Resolution of the circular integration
     integrationprecision = 0.05
     angs = np.concatenate([np.arange(intreg[0,0], intreg[0,1], integrationprecision),
                             np.arange(intreg[1,0], intreg[1,1], integrationprecision)],
                             axis=0)
+    print(131)
     x, y, r = np.meshgrid(np.arange(2*maxdispl),
                           np.arange(2*maxdispl),
                           np.arange(maxrad-minrad))
+    print(132)                      
     y = inner_y - maxdispl + y
     x = inner_x - maxdispl + x
     r = minrad + r
+    print(133)
     hs = ContourIntegralCircular(img, y, x, r, angs)
-
+    print(14)
     # Hough Space Partial Derivative R
     hspdr = hs - hs[:, :, np.insert(np.arange(hs.shape[2]-1), 0, 0)]
 
     # Blur
     sm = 7 	# Size of the blurring mask
     hspdrs = signal.fftconvolve(hspdr, np.ones([sm,sm,sm]), mode="same")
-
+    print(15)
     indmax = np.argmax(hspdrs.ravel())
     y,x,r = np.unravel_index(indmax, hspdrs.shape)
-
+    print(16)
     outer_y = inner_y - maxdispl + y + 1
     outer_x = inner_x - maxdispl + x + 1
     outer_r = minrad + r - 1

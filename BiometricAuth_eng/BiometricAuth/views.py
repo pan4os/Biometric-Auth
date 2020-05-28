@@ -12,7 +12,7 @@ from django.contrib.auth import (
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from .forms import UserLoginForm, IrisAuth
-from .iris_auth.prepare import prepare_image
+# from .iris_auth.prepare import prepare_image
 from .authenticate import (
     IrisAuthBackend,
 
