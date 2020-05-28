@@ -1,0 +1,14 @@
+{% extends 'TestApp/base.html' %}
+
+{% block content %}
+    {% comment %} <form method="GET" name='search'>
+        <div class="active-cyan-4 mb-4 my-2">
+            <input {% if search_key_word %}value='{{ search_key_word }}'{% endif %} name='key-word' class="form-control" type="text" placeholder="Поиск по ключевым словам..." aria-label="Search">
+        </div>
+        <button type="success" class="btn btn-primary">Поиск</button>
+    </form> {% endcomment %}
+
+     {% if user.is_authenticated %}
+        Здравствуйте, {{ user.username }}
+    {% endif %} 
+{% endblock %}

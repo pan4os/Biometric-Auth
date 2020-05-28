@@ -1,0 +1,40 @@
+{% extends 'TestApp/base.html' %}
+
+{% block content %}
+    <div id='iris-photos'>
+        <p>Загрузите фотографии Вашей сетчатки, чтобы разблокировать возможность аутентификации с помощью нее.</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table class='no_error table'>
+                <thead>
+                    <tr>
+                    <th scope="col">Фото сетчатки</th>
+                    <th scope="col">Удалить?</th>
+                    </tr>
+                </thead>
+            {% comment %} {{ iris_formset.media }} {% endcomment %}
+                {% for form in iris_formset.forms %}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}  
+                    <div class="form-group">
+                        {{ form.non_field_errors }}
+                        {{ form.errors }}
+                        <tbody>
+                            <tr>
+                                <td> {{ form.iris_image }} </td>
+                                <td>
+                                {% if iris_formset.can_delete %}
+                                    {{ form.DELETE }}
+                                {% endif %} 
+                                </td>
+                            </tr>
+                        </tbody>
+                    </div>
+                {% endfor %}
+                {{ iris_formset.management_form }}
+            </table>
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}

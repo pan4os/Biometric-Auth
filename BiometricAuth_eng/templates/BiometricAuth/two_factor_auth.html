@@ -1,0 +1,23 @@
+{% extends 'TestApp/base.html' %}
+
+{% block content %}
+
+    <p>{{ user_biometry.user.username }}, подтвердите, что это именно вы!</p>
+    <p>Для этого аккаунта доступны такие методы аутентификации:</p>
+    
+    {% if user_biometry.iris_photo_counter %}
+        <p>По сетчатке глаза:</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ auth_forms.iris.non_field_errors }}
+                {{ auth_forms.iris.errors }}
+            </div>
+            {% comment %} <input name="auth-type" value='iris' hidden/> {% endcomment %}
+            {{ auth_forms.iris.auth_type }}
+            <p>{{ auth_forms.iris.iris_image }}</p>
+            <button type="submit">Войти</button>
+        </form>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "TestApp/base.html" %}
+
+{% block content %}
+
+    <div class="">
+        <form class="" method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <p>
+            <label class="" for="username">
+            {{ field.label_tag }}
+            </label>
+            {{ field }}
+            {% for error in field.errors %}
+                <p class="">{{ error }}</p>
+            {% endfor %}
+            </p>
+            {% endfor %}
+            <button class="" type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+{% endblock %}
