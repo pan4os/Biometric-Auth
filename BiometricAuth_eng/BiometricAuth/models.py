@@ -8,7 +8,8 @@ from .iris_auth.enroll_single import enroll_single
 class UserBiometry(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     iris_photo_counter = models.PositiveSmallIntegerField(default=0)
-
+    face_photo_counter = models.PositiveSmallIntegerField(default=0)
+    fingerprint_photo_counter = models.PositiveSmallIntegerField(default=0)
 
     def change_iris_photo_counter(self, increase=True):
         if increase:

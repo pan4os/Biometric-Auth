@@ -15,7 +15,6 @@ from .forms import UserLoginForm, IrisAuth
 
 from .authenticate import (
     IrisAuthBackend,
-
 )
 from .models import (
     UserBiometry,
@@ -58,10 +57,23 @@ class LogIn(View):
                 user_pk = User.objects.get(username=username).pk
             except User.DoesNotExist:
                 raise Http404()
-            request.session['username'] = username
-            request.session['password'] = password
-            request.session['user_pk'] = user_pk
-            return redirect('two-factor-auth')
+            user_biometry = None
+            try:
+                user_biometry = UserBiometry.objects.get(user__pk=user_pk)
+            except UserBiometry.DoesNotExist:
+                raise Http404()
+            if user_biometry.iris_photo_counter or user_biometry.face_photo_counter or user_biometry.fingerprint_photo_counter:
+                request.session['username'] = username
+                request.session['password'] = password
+                request.session['user_pk'] = user_pk
+                return redirect('two-factor-auth')
+            else:
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('/')
+                else:
+                    form.add_error(None, "УПС! Совпадений не найдено...")
         else:
             context = {
                 'form' : form
@@ -123,7 +135,7 @@ class TwoFactorAuth(View):
                     auth_forms['iris'] = form
             else:
                 auth_forms['iris'] = form
-                
+
         elif form_type == 'fingerprint':
             pass
         
