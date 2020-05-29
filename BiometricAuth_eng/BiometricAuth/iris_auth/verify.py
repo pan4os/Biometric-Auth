@@ -6,7 +6,7 @@ from time import time
 
 from .fnc.extractFeature import extractFeature
 from .fnc.matching import matching
-
+import numpy as np
 
 # #------------------------------------------------------------------------------
 # #	Argument parsing
@@ -57,17 +57,18 @@ from .fnc.matching import matching
 # end = time()
 # print('\n>>> Verification time: {} [s]\n'.format(end - start))
 
-def verify(file_path):
-	template, mask, file = extractFeature(file_path)
+def verify(image, temp_dir, thres=0.38):
+	template, mask, file = extractFeature(np.array(image))
 	# Matching
-	result = matching(template, mask, args.temp_dir, args.thres)
+	result = matching(template, mask, temp_dir, thres)
 	if result == -1:
 		print('>>> No registered sample.')
-
+		return False
 	elif result == 0:
 		print('>>> No sample matched.')
-
+		return False
 	else:
 		print('>>> {} samples matched (descending reliability):'.format(len(result)))
 		for res in result:
 			print("\t", res)
+		return True

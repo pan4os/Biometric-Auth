@@ -91,12 +91,12 @@ class TwoFactorAuth(View):
     # username = None
     # password = None
     # user_pk = None
-    auth_forms = {
-        'iris': IrisAuth(),
-    }
+
 
     def get(self, request):
-        # next_page = request.GET.get('next')
+        auth_forms = {
+            'iris': IrisAuth(),
+        }
         username = request.session.get('username', None)
         password = request.session.get('password', None)
         user_pk = request.session.get('user_pk', None)
@@ -110,12 +110,15 @@ class TwoFactorAuth(View):
 
         context = {
             'user_biometry':user_biometry,
-            'auth_forms':self.auth_forms,
+            'auth_forms':auth_forms,
         }
         return render(request,'BiometricAuth/two_factor_auth.html', context=context)
 
 
     def post(self, request):
+        auth_forms = {
+            'iris': IrisAuth(),
+        }
         form_type = request.POST.get('auth_type').strip()
         print('Form type={}'.format(form_type))
         username = request.session.get('username', None)
@@ -141,16 +144,16 @@ class TwoFactorAuth(View):
                         return redirect(self.next_page)
                     return redirect('/')
                 else:
-                    form.add_error(None, "Username, password or face id didn't match.")
-                    # self.auth_forms['iris'] = form
+                    form.add_error(None, "УПС! Совпадений не найдено...")
+                    auth_forms['iris'] = form
                     # print('\t',form )
             else:
-                self.auth_forms['iris'] = form
+                auth_forms['iris'] = form
                 print('\t',form )
         # print('\t',self.auth_forms['iris'])
         context = {
             'user_biometry': user_biometry,
-            'auth_forms': self.auth_forms,
+            'auth_forms': auth_forms,
         }
         # print(self.username)
         return render(request,'BiometricAuth/two_factor_auth.html', context=context)

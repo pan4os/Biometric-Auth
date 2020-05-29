@@ -6,7 +6,7 @@ from cv2 import imread
 from .segment import segment
 from .normalize import normalize
 from .encode import encode
-
+import numpy as np
 
 ##-----------------------------------------------------------------------------
 ##  Parameters for extracting feature
@@ -28,7 +28,7 @@ sigmaOnf = 0.5
 ##-----------------------------------------------------------------------------
 ##  Function
 ##-----------------------------------------------------------------------------
-def extractFeature(im_filename, eyelashes_thres=80, use_multiprocess=False):
+def extractFeature(im=None,im_filename=None, eyelashes_thres=80, use_multiprocess=False):
 	"""
 	Description:
 		Extract features from an iris image
@@ -43,7 +43,8 @@ def extractFeature(im_filename, eyelashes_thres=80, use_multiprocess=False):
 		im_filename			- The input iris image
 	"""
 	# Perform segmentation
-	im = imread(im_filename, 0)
+	if im_filename:
+		im = imread(im_filename, 0)
 	print('\tTYPE: ', type(im))
 	print(im)
 	ciriris, cirpupil, imwithnoise = segment(im, eyelashes_thres, use_multiprocess=use_multiprocess)

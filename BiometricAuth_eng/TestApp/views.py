@@ -56,7 +56,7 @@ class PersonalAccount(View):
             for form in iris_formset:
                 # Обновляем счетчик для каждой измененной формы
                 if form.has_changed():
-                    if form.cleaned_data.get('DELETE'):
+                    if form.cleaned_check_irisdata.get('DELETE'):
                         user_biometry.change_iris_photo_counter(increase = False)
                         user_biometry.save()
                     elif iris_image := form.cleaned_data.get('iris_image'):

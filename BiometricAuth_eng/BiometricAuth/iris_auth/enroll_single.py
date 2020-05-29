@@ -6,6 +6,7 @@ from time import time
 from scipy.io import savemat
 
 from .fnc.extractFeature import extractFeature
+from BiometricAuth.utils import check_and_create_folder
 
 # from .fnc.check_eye import check_eye
 # #------------------------------------------------------------------------------
@@ -66,10 +67,11 @@ from .fnc.extractFeature import extractFeature
 def enroll_single(file_path):
     print(file_path)
     # if check_eye(file_path):
-    folder = os.path.dirname(file_path)
+    folder = os.path.join(os.path.dirname(file_path),'mat')
+    check_and_create_folder(folder)
     print('\tFolder: ', folder)
     print('\tFile name: ', file_path)
-    template, mask, file = extractFeature(file_path)
+    template, mask, file = extractFeature(im_filename=file_path)
     print('\tFile: ', file)
     basename = os.path.basename(file)
     print('\tBase name: ', basename)
