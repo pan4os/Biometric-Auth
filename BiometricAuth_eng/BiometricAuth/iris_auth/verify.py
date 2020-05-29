@@ -58,7 +58,7 @@ import numpy as np
 # print('\n>>> Verification time: {} [s]\n'.format(end - start))
 
 def verify(image, temp_dir, thres=0.38):
-	template, mask, file = extractFeature(np.array(image))
+	template, mask = extractFeature(np.array(image))
 	# Matching
 	result = matching(template, mask, temp_dir, thres)
 	if result == -1:

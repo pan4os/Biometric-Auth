@@ -12,7 +12,7 @@ from django.contrib.auth import (
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from .forms import UserLoginForm, IrisAuth
-# from .iris_auth.prepare import prepare_image
+
 from .authenticate import (
     IrisAuthBackend,
 
@@ -27,32 +27,22 @@ from .models import (
 class SignUp(FormView):
     form_class = UserCreationForm
     success_url = "/"
-
     template_name = "BiometricAuth/signup.html"
 
     def form_valid(self, form):
         form.save()
-        # user = User.objects.get(form.cleaned_data.get('username'))
-        # print(user)
-        # UserBiometry(user=user)
-        #     temp_user_biometry.save()
         return super().form_valid(form)
 
 def custom_logout(request):
     print('Loggin out {}'.format(request.user))
     logout(request)
-    print(request.user)
-    return HttpResponseRedirect(request.GET.get('next','/'))
+    return HttpResponseRedirect('/')
 
  
-
 class LogIn(View):
     html_template = 'BiometricAuth/login.html'
-    next_page = None
-    # two_factor_choice_html_template = 'BiometricAuth/two_factor_auth.html'
 
     def get(self, request):
-        self.next_page = request.GET.get('next')
         form = UserLoginForm()
         context = {
             'form' : form
@@ -71,12 +61,6 @@ class LogIn(View):
             request.session['username'] = username
             request.session['password'] = password
             request.session['user_pk'] = user_pk
-            # После успешной аутентификации :
-            # user = authenticate(username=username, password=password)
-            # login(request, user)
-            # if self.next_page:
-            #     return redirect(self.next_page)
-            # return redirect('/')
             return redirect('two-factor-auth')
         else:
             context = {
@@ -85,13 +69,7 @@ class LogIn(View):
             return render(request, self.html_template, context=context)
 
 class TwoFactorAuth(View):
-
     next_page = '/'
-    # user_biometry = None
-    # username = None
-    # password = None
-    # user_pk = None
-
 
     def get(self, request):
         auth_forms = {
@@ -104,10 +82,8 @@ class TwoFactorAuth(View):
             raise Http404()
         try:
             user_biometry = UserBiometry.objects.get(user__pk=user_pk)
-
         except UserBiometry.DoesNotExist:
             raise Http404()
-
         context = {
             'user_biometry':user_biometry,
             'auth_forms':auth_forms,
@@ -133,7 +109,6 @@ class TwoFactorAuth(View):
 
         if form_type == 'iris':
             form = IrisAuth(request.POST or None, request.FILES or None)
-            print(form)
             if form.is_valid():
                 iris_image = form.cleaned_data.get('iris_image')
                 iris_auth = IrisAuthBackend()
@@ -146,16 +121,19 @@ class TwoFactorAuth(View):
                 else:
                     form.add_error(None, "УПС! Совпадений не найдено...")
                     auth_forms['iris'] = form
-                    # print('\t',form )
             else:
                 auth_forms['iris'] = form
-                print('\t',form )
-        # print('\t',self.auth_forms['iris'])
+                
+        elif form_type == 'fingerprint':
+            pass
+        
+        elif form_type == 'face':
+            pass
+
         context = {
             'user_biometry': user_biometry,
             'auth_forms': auth_forms,
         }
-        # print(self.username)
         return render(request,'BiometricAuth/two_factor_auth.html', context=context)
 
 

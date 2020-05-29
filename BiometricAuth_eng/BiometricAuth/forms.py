@@ -2,15 +2,7 @@ from django import forms
 from . import models
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib.auth import authenticate
-# from abc import ABC
-# class UserBiometry(forms.ModelForm):
-#     class Meta:
-#     model = buildingImages
-#     fields = ('buildingImage',)
-#     labels = {
-#         'buildingImage': ('buildingImage',),
-#     }
-#     exclude = ()
+
 
 class UserLoginForm(forms.Form):
     username = forms.CharField()
@@ -31,28 +23,27 @@ class UserLoginForm(forms.Form):
         return super().clean(*args, **kwargs)
 
 
-# class ITwoFactorAuthFormMixin(ABC, forms.Form):
-#     auth_type = None
+# ---------------- Формы для алгоритмов
 
+# ---------------- Радужка глаза:
 class IrisAuth(forms.Form):
+    '''
+    Форма для страницы аутентификации.
+    auth_type нужен для идентификации формы на странице двухфакторной аутентификации
+    '''
     auth_type = forms.CharField(widget=forms.HiddenInput(), initial='iris')
     iris_image = forms.ImageField()
-    # pass
-    # def clean(sel, *args, **kwargs):
 
 
 class IrisImagesForm(forms.ModelForm):
-    # iris_image = forms.ImageField()
-    # a = forms.CharField()
+    '''
+    Форма для страницы профиля (загрузка изображений в профиль)
+    auth_type нужен для идентификации формы на странице профиля
+    '''
+    # auth_type = forms.CharField(widget=forms.HiddenInput(), initial='iris')
     class Meta:
         model = models.IrisImages
         fields = '__all__'
-
-    # def __init__(self, *args, **kwargs):
-    #         super().__init__(*args, **kwargs)
-
-    #         self.fields['iris_image'].widget = forms.ImageField() 
-
 
 IrisImagesFormset = inlineformset_factory(
     models.UserBiometry,
@@ -61,4 +52,11 @@ IrisImagesFormset = inlineformset_factory(
     extra=1,
     can_delete=True
     )
+
+
+# ------------------- Лицо:
+
+
+
+# ------------------- Отпечаток пальца:
                                            

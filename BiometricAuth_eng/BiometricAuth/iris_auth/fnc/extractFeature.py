@@ -43,9 +43,8 @@ def extractFeature(im=None,im_filename=None, eyelashes_thres=80, use_multiproces
 		im_filename			- The input iris image
 	"""
 	# Perform segmentation
-	if im_filename:
-		im = imread(im_filename, 0)
-	print('\tTYPE: ', type(im))
+	# if im_filename:
+	# 	im = imread(im_filename, 0)
 	print(im)
 	ciriris, cirpupil, imwithnoise = segment(im, eyelashes_thres, use_multiprocess=use_multiprocess)
 	print('END')
@@ -57,4 +56,4 @@ def extractFeature(im=None,im_filename=None, eyelashes_thres=80, use_multiproces
 	template, mask = encode(polar_array, noise_array, minWaveLength, mult, sigmaOnf)
 
 	# Return
-	return template, mask, im_filename
+	return template, mask

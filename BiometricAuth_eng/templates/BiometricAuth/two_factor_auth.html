@@ -11,9 +11,7 @@
             {% csrf_token %}
             <div class="form-group">
                 {{ auth_forms.iris.non_field_errors }}
-                {% comment %} {{ auth_forms.iris.errors }} {% endcomment %}
             </div>
-            {% comment %} <input name="auth-type" value='iris' hidden/> {% endcomment %}
             {{ auth_forms.iris.auth_type }}
             <p>{{ auth_forms.iris.iris_image }}</p>
             <button type="submit">Войти</button>
