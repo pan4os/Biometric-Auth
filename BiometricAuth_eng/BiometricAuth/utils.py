@@ -18,3 +18,6 @@ def check_and_create_folder(out_folder):
 def get_iris_mat_path(user_biometry_id):
     user_iris_folder_name = 'biometric_data/user_{}/iris/mat/'.format(user_biometry_id)
     return os.path.join(settings.MEDIA_ROOT, user_iris_folder_name)
+def get_face_mat_path(user_biometry_id):
+    user_face_floder_name = 'biometric_data/user_{}/face/mat/'.format(user_biometry_id)
+    return os.path.join(settings.MEDIA_ROOT, user_face_floder_name)

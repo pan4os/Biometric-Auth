@@ -11,10 +11,11 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from .forms import UserLoginForm, IrisAuth
+from .forms import UserLoginForm, IrisAuth,FaceAuth
 
 from .authenticate import (
     IrisAuthBackend,
+    FaceAuthBackend
 )
 from .models import (
     UserBiometry,
@@ -86,6 +87,7 @@ class TwoFactorAuth(View):
     def get(self, request):
         auth_forms = {
             'iris': IrisAuth(),
+            'face': FaceAuth()
         }
         username = request.session.get('username', None)
         password = request.session.get('password', None)
@@ -106,6 +108,7 @@ class TwoFactorAuth(View):
     def post(self, request):
         auth_forms = {
             'iris': IrisAuth(),
+            'face': FaceAuth()
         }
         form_type = request.POST.get('auth_type').strip()
         print('Form type={}'.format(form_type))
@@ -140,7 +143,21 @@ class TwoFactorAuth(View):
             pass
         
         elif form_type == 'face':
-            pass
+            form = FaceAuth(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                face_image = form.cleaned_data.get('face_image')
+                face_auth = FaceAuthBackend()
+                user = face_auth.authenticate(username=username, password=password, uploaded_face=face_image)
+                if user is not None:
+                    login(request, user)
+                    if self.next_page:
+                        return redirect(self.next_page)
+                    return redirect('/')
+                else:
+                    form.add_error(None, "УПС! Совпадений не найдено...")
+                    auth_forms['face'] = form
+            else:
+                auth_forms['face'] = form
 
         context = {
             'user_biometry': user_biometry,
