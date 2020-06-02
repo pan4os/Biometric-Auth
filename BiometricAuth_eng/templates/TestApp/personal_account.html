@@ -24,7 +24,7 @@
                             <tr>
                                 <td> {{ form.iris_image }} </td>
                                 <td>
-                                {% if iris_formset.can_delete %}
+                                {% if formsets.iris_formset.can_delete %}
                                     {{ form.DELETE }}
                                 {% endif %} 
                                 </td>
@@ -37,12 +37,45 @@
             <button type="submit">Сохранить радужку</button>
         </form>
     </div>
-
+    
     <div id="fingerprint-photos">
 
     </div>
 
     <div id='face-photos'>
-
+        <p>Загрузите фотографию лица, чтобы разблокировать возможность аутентификации с помощью нее.</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input name='form_type' value='face' hidden/>
+            <table class='no_error table'>
+                <thead>
+                    <tr>
+                    <th scope="col">Фото лицо</th>
+                    <th scope="col">Удалить?</th>
+                    </tr>
+                </thead>
+                {% for form in formsets.face_formset.forms %}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}  
+                    <div class="form-group">
+                        {{ form.non_field_errors }}
+                        {{ form.errors }}
+                        <tbody>
+                            <tr>
+                                <td> {{ form.face_image }} </td>
+                                <td>
+                                {% if formsets.face_formset.can_delete %}
+                                    {{ form.DELETE }}
+                                {% endif %} 
+                                </td>
+                            </tr>
+                        </tbody>
+                    </div>
+                {% endfor %}
+                {{ formsets.face_formset.management_form }}
+            </table>
+            <button type="submit">Сохранить лицо</button>
+        </form>
     </div>
 {% endblock %}

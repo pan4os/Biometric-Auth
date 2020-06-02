@@ -55,7 +55,27 @@ IrisImagesFormset = inlineformset_factory(
 
 
 # ------------------- Лицо:
+class FaceAuth(forms.Form):
+    auth_type = forms.CharField(widget=forms.HiddenInput(), initial='face')
+    face_image = forms.ImageField()
 
+class FaceImagesForm(forms.ModelForm):
+    '''
+    Форма для страницы профиля (загрузка изображений в профиль)
+    auth_type нужен для идентификации формы на странице профиля
+    '''
+    # auth_type = forms.CharField(widget=forms.HiddenInput(), initial='iris')
+    class Meta:
+        model = models.FaceImages
+        fields = '__all__'
+
+FaceImagesFormset = inlineformset_factory(
+    models.UserBiometry,
+    models.FaceImages, 
+    fields=('face_image',), 
+    extra=1,
+    can_delete=True
+    )
 
 
 # ------------------- Отпечаток пальца:

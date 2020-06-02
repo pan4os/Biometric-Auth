@@ -2,20 +2,32 @@
 
 {% block content %}
 
-    <p>{{ user_biometry.user.username }}, подтвердите, что это именно вы!</p>
-    <p>Для этого аккаунта доступны такие методы аутентификации:</p>
-    
-    {% if user_biometry.iris_photo_counter %}
-        <p>По сетчатке глаза:</p>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ auth_forms.iris.non_field_errors }}
-            </div>
-            {{ auth_forms.iris.auth_type }}
-            <p>{{ auth_forms.iris.iris_image }}</p>
-            <button type="submit">Войти</button>
-        </form>
-    {% endif %}
+<p>{{ user_biometry.user.username }}, подтвердите, что это именно вы!</p>
+<p>Для этого аккаунта доступны такие методы аутентификации:</p>
 
+{% if user_biometry.iris_photo_counter %}
+<p>По сетчатке глаза:</p>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ auth_forms.iris.non_field_errors }}
+    </div>
+    {{ auth_forms.iris.auth_type }}
+    <p>{{ auth_forms.iris.iris_image }}</p>
+    <button type="submit">Войти</button>
+</form>
+{% endif %}
+<hr>
+{% if user_biometry.face_photo_counter %}
+<p>По лицу:</p>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ auth_forms.face.non_field_errors }}
+    </div>
+    {{ auth_forms.face.auth_type }}
+    <p>{{ auth_forms.face.face_image }}</p>
+    <button type="submit">Войти</button>
+</form>
+{% endif %}
 {% endblock %}
