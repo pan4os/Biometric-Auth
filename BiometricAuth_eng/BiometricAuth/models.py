@@ -36,14 +36,15 @@ def save_user_profile(sender, instance, **kwargs):
     instance.userbiometry.save()
 
 
-def face_directory_path(instance, filename):
 
-     return 'biometric_data/user_{0}/face/{1}'.format(instance.user.id, filename)
 
 # --------------------------- Модели для алгоритмов:
 def iris_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'biometric_data/user_{0}/iris/{1}'.format(instance.user.id, filename)
+
+def face_directory_path(instance, filename):
+     return 'biometric_data/user_{0}/face/{1}'.format(instance.user.id, filename)
 
 class IrisImages(models.Model):
     user = models.ForeignKey(UserBiometry, on_delete=models.CASCADE,related_name='iris_image')

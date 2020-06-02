@@ -24,7 +24,7 @@
                             <tr>
                                 <td> {{ form.iris_image }} </td>
                                 <td>
-                                {% if iris_formset.can_delete %}
+                                {% if formsets.iris_formset.can_delete %}
                                     {{ form.DELETE }}
                                 {% endif %} 
                                 </td>
@@ -37,7 +37,7 @@
             <button type="submit">Сохранить радужку</button>
         </form>
     </div>
-
+    
     <div id="fingerprint-photos">
 
     </div>
@@ -65,7 +65,7 @@
                             <tr>
                                 <td> {{ form.face_image }} </td>
                                 <td>
-                                {% if face_formset.can_delete %}
+                                {% if formsets.face_formset.can_delete %}
                                     {{ form.DELETE }}
                                 {% endif %} 
                                 </td>
