@@ -4,10 +4,13 @@ from django.http import Http404
 from BiometricAuth.models import (
     UserBiometry, 
     IrisImages,
+    FaceImages
 )
 from BiometricAuth.forms import (
     IrisImagesFormset, 
     IrisImagesForm,
+    FaceImagesForm,
+    FaceImagesFormset
 )
 
 class IndexPage(View):
@@ -25,6 +28,7 @@ class PersonalAccount(View):
         
         formsets = {
             'iris_formset':IrisImagesFormset(instance=user_biometry, prefix='iris_image'),
+            'face_formset':FaceImagesFormset(instance=user_biometry, prefix='face_image'),
 
         }
 
@@ -44,6 +48,7 @@ class PersonalAccount(View):
         user_biometry = get_object_or_404(UserBiometry, user=request.user.id)
         formsets = {
             'iris_formset':IrisImagesFormset(instance=user_biometry, prefix='iris_image'),
+            'face_formset':FaceImagesFormset(instance=user_biometry, prefix='face_image'),
             
         }
         form_type = request.POST.get('form_type').strip()
@@ -78,7 +83,32 @@ class PersonalAccount(View):
         elif form_type == 'finger_print':
             pass
         elif form_type == 'face':
-            pass
+            face_formset = FaceImagesFormset(
+                request.POST or None, 
+                request.FILES or None, 
+                prefix='face_image',
+                instance = user_biometry
+                )
+            if face_formset.is_valid():
+                for form in face_formset:
+                    # Обновляем счетчик для каждой измененной формы
+                    if form.has_changed():
+                        if form.cleaned_data.get('DELETE'):
+                            user_biometry.change_face_photo_counter(increase = False)
+                            user_biometry.save()
+                        elif face_image := form.cleaned_data.get('face_image'):
+
+                            user_biometry.change_face_photo_counter()
+                            user_biometry.save()
+
+                print('Счетчик: ', user_biometry.face_photo_counter)
+                face_formset.save()
+                
+                return redirect('personal-account')
+            else:
+                # Чтобы отобразить ошибки
+                formsets['face_formset'] = face_formset
+
 
         context = {
             'formsets' : formsets,
