@@ -11,11 +11,12 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from .forms import UserLoginForm, IrisAuth,FaceAuth
+from .forms import UserLoginForm, IrisAuth,FaceAuth, FingerPrintAuth
 
 from .authenticate import (
     IrisAuthBackend,
-    FaceAuthBackend
+    FaceAuthBackend,
+    FingerPrintAuthBackend
 )
 from .models import (
     UserBiometry,
@@ -38,7 +39,7 @@ def custom_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
- 
+
 class LogIn(View):
     html_template = 'BiometricAuth/login.html'
 
@@ -48,7 +49,7 @@ class LogIn(View):
             'form' : form
         }
         return render(request, self.html_template, context=context)
-   
+
     def post(self, request):
         form = UserLoginForm(request.POST or None)
         if form.is_valid():
@@ -87,7 +88,8 @@ class TwoFactorAuth(View):
     def get(self, request):
         auth_forms = {
             'iris': IrisAuth(),
-            'face': FaceAuth()
+            'face': FaceAuth(),
+            'fingerprint': FingerPrintAuth()
         }
         username = request.session.get('username', None)
         password = request.session.get('password', None)
@@ -108,7 +110,8 @@ class TwoFactorAuth(View):
     def post(self, request):
         auth_forms = {
             'iris': IrisAuth(),
-            'face': FaceAuth()
+            'face': FaceAuth(),
+            'fingerprint': FingerPrintAuth(),
         }
         form_type = request.POST.get('auth_type').strip()
         print('Form type={}'.format(form_type))
@@ -140,8 +143,23 @@ class TwoFactorAuth(View):
                 auth_forms['iris'] = form
 
         elif form_type == 'fingerprint':
-            pass
-        
+            form = FingerPrintAuth(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                fingerprint_image = form.cleaned_data.get('fingerprint_image')
+                fingerprint_auth = FingerPrintAuthBackend()
+                user = fingerprint_auth.authenticate(username=username, password=password, uploaded_fingerprint=fingerprint_image)
+                if user is not None:
+                    login(request, user)
+                    if self.next_page:
+                        return redirect(self.next_page)
+                    return redirect('/')
+                else:
+                    form.add_error(None, "УПС! Совпадений не найдено...")
+                    auth_forms['fingerprint'] = form
+            else:
+                auth_forms['fingerprint'] = form
+
+
         elif form_type == 'face':
             form = FaceAuth(request.POST or None, request.FILES or None)
             if form.is_valid():
@@ -164,5 +182,3 @@ class TwoFactorAuth(View):
             'auth_forms': auth_forms,
         }
         return render(request,'BiometricAuth/two_factor_auth.html', context=context)
-
-
