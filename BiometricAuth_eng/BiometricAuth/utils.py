@@ -1,5 +1,7 @@
 import os
 from django.conf import settings
+import base64
+from django.core.files.base import ContentFile
 
 def check_and_create_folder(out_folder):
     if os.path.exists(out_folder):
@@ -30,3 +32,12 @@ def get_fingerprint_skelet_path(user_biometry_id):
 def get_fingerprint_path(user_biometry_id):
     user_fingerprint_folder_name = 'biometric_data/user_{}/fingerprint/'.format(user_biometry_id)
     return os.path.join(settings.MEDIA_ROOT, user_fingerprint_folder_name)
+
+
+
+def base64_file(data, name=None):
+    _format, _img_str = data.split(';base64,')
+    _name, ext = _format.split('/')
+    if not name:
+        name = _name.split(":")[-1]
+    return ContentFile(base64.b64decode(_img_str), name='{}.{}'.format(name, ext))

@@ -72,7 +72,7 @@ class PersonalAccount(View):
                         if form.cleaned_data.get('DELETE'):
                             user_biometry.change_iris_photo_counter(increase = False)
                             user_biometry.save()
-                        elif iris_image :
+                        elif iris_image:=form.cleaned_data.get('iris_image') :
 
                             user_biometry.change_iris_photo_counter()
                             user_biometry.save()
@@ -94,13 +94,13 @@ class PersonalAccount(View):
                 )
             if fingerprint_formset.is_valid():
                 for form in fingerprint_formset:
-                    fingerprint_image = form.cleaned_data.get('fingerprint_image')
+                    # fingerprint_image = form.cleaned_data.get('fingerprint_image')
                     # Обновляем счетчик для каждой измененной формы
                     if form.has_changed():
                         if form.cleaned_data.get('DELETE'):
                             user_biometry.change_finger_photo_counter(increase = False)
                             user_biometry.save()
-                        elif fingerprint_image :
+                        elif fingerprint_image:=form.cleaned_data.get('fingerprint_image') :
 
                             user_biometry.change_finger_photo_counter()
                             user_biometry.save()
@@ -126,8 +126,7 @@ class PersonalAccount(View):
                         if form.cleaned_data.get('DELETE'):
                             user_biometry.change_face_photo_counter(increase = False)
                             user_biometry.save()
-                        elif face_image :
-
+                        elif face_image := form.cleaned_data.get('face_image'):
                             user_biometry.change_face_photo_counter()
                             user_biometry.save()
 

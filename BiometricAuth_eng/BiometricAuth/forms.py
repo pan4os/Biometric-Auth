@@ -57,7 +57,22 @@ IrisImagesFormset = inlineformset_factory(
 # ------------------- Лицо:
 class FaceAuth(forms.Form):
     auth_type = forms.CharField(widget=forms.HiddenInput(), initial='face')
-    face_image = forms.ImageField()
+    face_image = forms.ImageField(required=False)
+    face_webcam_image_uri = forms.CharField(widget=forms.HiddenInput(), required = False,)
+
+    def clean(self, *args, **kwargs):
+        face_image = self.cleaned_data.get('face_image')
+        face_webcam_image_uri = self.cleaned_data.get('face_webcam_image_uri')
+
+        if not face_image and not face_webcam_image_uri:
+            # user = authenticate(username=username, password=password)
+            # if not user:
+            #     raise forms.ValidationError('Нет такого пользователя')
+            # if not user.check_password(password):
+            #     raise forms.ValidationError('Неверный пароль')
+            # if not user.is_active:
+            raise forms.ValidationError('Заполните хотя-бы одно фото!')
+        return super().clean(*args, **kwargs)
 
 class FaceImagesForm(forms.ModelForm):
     '''

@@ -18,18 +18,34 @@
 </form>
 {% endif %}
 <hr>
+
+{% comment %} WEBCAM {% endcomment %}
 {% if user_biometry.face_photo_counter %}
 <p>По лицу:</p>
-<form method="POST" enctype="multipart/form-data">
+<p><button onclick="createWebcam()">Активировать камеру</button></p>
+<div id="webcam-block" hidden>
+    <video id="webcam" autoplay playsinline width="640" height="480"></video>
+    <canvas id="canvas" class="d-none"></canvas> 
+</div>
+
+<!-- <p><button onclick="getPhoto()">Сделать фото</button></p>    -->
+<!-- <p><a id="photo-preview"></a></p> -->
+<!-- <div id="img-preview" hidden>
+    <p>Фото:</p>
+    <img id="photo-preview">
+</div> -->
+<form method="POST" enctype="multipart/form-data" id="faceForm">
     {% csrf_token %}
     <div class="form-group">
         {{ auth_forms.face.non_field_errors }}
     </div>
     {{ auth_forms.face.auth_type }}
     <p>{{ auth_forms.face.face_image }}</p>
-    <button type="submit">Войти</button>
+    <p>{{ auth_forms.face.face_webcam_image_uri }}</p>
+    <button type="submit" onclick="takePhoto()">Войти</button>
 </form>
 {% endif %}
+
 {% if user_biometry.fingerprint_photo_counter %}
         <p>По отпечатку пальца:</p>
         <form method="POST" enctype="multipart/form-data">
@@ -42,4 +58,40 @@
             <button type="submit">Войти</button>
         </form>
     {% endif %}
+{% endblock %}
+
+{% block custom_js%}
+<script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
+
+<script>
+    webcam = null;
+    function createWebcam(){
+        document.querySelector('#webcam-block').removeAttribute("hidden"); 
+        const webcamElement = document.getElementById('webcam');
+        const canvasElement = document.getElementById('canvas');
+        // const snapSoundElement = document.getElementById('snapSound');
+        webcam = new Webcam(webcamElement, 'user', canvasElement); 
+        
+        webcam.start()
+        .then(result =>{
+            console.log("webcam started");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    
+    function takePhoto(){
+        // document.querySelector('#img-preview').removeAttribute('hidden')
+        if(webcam != null){
+            let picture = webcam.snap();
+            console.log(picture);
+            // document.querySelector('#photo-preview').src = picture;
+            document.querySelector('#id_face_webcam_image_uri').value=picture
+        }
+    // document.querySelector('#face-form').submit()
+    // document.querySelector('#downloaded-img')
+    }
+</script>
+
 {% endblock %}

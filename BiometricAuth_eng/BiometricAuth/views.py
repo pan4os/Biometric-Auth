@@ -24,6 +24,7 @@ from .models import (
     FaceImages,
     FingerPrintImages
 )
+from .utils import base64_file
 
 class SignUp(FormView):
     form_class = UserCreationForm
@@ -164,6 +165,11 @@ class TwoFactorAuth(View):
             form = FaceAuth(request.POST or None, request.FILES or None)
             if form.is_valid():
                 face_image = form.cleaned_data.get('face_image')
+                face_image_uri = form.cleaned_data.get('face_webcam_image_uri')
+                # print(type(face_image))
+                # print(face_image_uri)
+                if face_image_uri:
+                    face_image = base64_file(face_image_uri, 'temp')
                 face_auth = FaceAuthBackend()
                 user = face_auth.authenticate(username=username, password=password, uploaded_face=face_image)
                 if user is not None:
