@@ -8,16 +8,24 @@
 
             {% for field in form %}
             <p>
+                <div class="col-md-6">
             <label class="" for="username">
+            
+                
             {{ field.label_tag }}
+        </div>
             </label>
-            {{ field }}
+            <div class="col-md-6">
+                <div class="controls">{{ field  }}</div>
+            </div>
             {% for error in field.errors %}
                 <p class="">{{ error }}</p>
             {% endfor %}
             </p>
             {% endfor %}
-            <button class="" type="submit">Зарегистрироваться</button>
+            <div class="col-md-6">
+            <button type="submit"class= "btn btn-primary">Зарегистрироваться</button>
+        </div>
         </form>
     </div>
 {% endblock %}
