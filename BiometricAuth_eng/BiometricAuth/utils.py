@@ -22,3 +22,11 @@ def get_iris_mat_path(user_biometry_id):
 def get_face_mat_path(user_biometry_id):
     user_face_floder_name = 'biometric_data/user_{}/face/'.format(user_biometry_id)
     return os.path.join(settings.MEDIA_ROOT, user_face_floder_name)
+
+def get_fingerprint_skelet_path(user_biometry_id):
+    user_fingerprint_folder_name = 'biometric_data/user_{}/fingerprint/skelet/'.format(user_biometry_id)
+    return os.path.join(settings.MEDIA_ROOT, user_fingerprint_folder_name)
+
+def get_fingerprint_path(user_biometry_id):
+    user_fingerprint_folder_name = 'biometric_data/user_{}/fingerprint/'.format(user_biometry_id)
+    return os.path.join(settings.MEDIA_ROOT, user_fingerprint_folder_name)
