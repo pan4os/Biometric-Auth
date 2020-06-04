@@ -4,7 +4,7 @@ from PIL import Image
 from django.contrib.auth.backends import ModelBackend
 from .iris_auth.verify import verify
 from .face_auth.face_verify import face_verify
-from .utils import get_iris_mat_path, get_fingerprint_skelet_path
+from .utils import get_iris_mat_path, get_fingerprint_skelet_path, get_fingerprint_path
 from .utils import get_face_mat_path
 from .fingerprint_auth.fingerprint_verify import fingerprint_verify
 from .fingerprint_auth.fp_join_folder import fp_join_folder
@@ -62,12 +62,12 @@ class FingerPrintAuthBackend(ModelBackend):
             print('DOES NOT EXIST')
 
     def check_fingerprint(self, user=None, uploaded_fingerprint=None):
-        fingerprint_image = os.listdir(get_fingerprint_skelet_path(user.userbiometry.id))
+        fingerprint_image = os.listdir(get_fingerprint_path(user.userbiometry.id))
         print(fingerprint_image)
         print('Uploaded fingerprint: ', uploaded_fingerprint)
         for i in range(len(fingerprint_image)):
             print(i, '  from folder:',fingerprint_image[i])
-            folder_path = Image.open(get_fingerprint_skelet_path(user.userbiometry.id) + fingerprint_image[i])
+            folder_path = Image.open(get_fingerprint_path(user.userbiometry.id) + fingerprint_image[i])
             # print()
             # print(folder_path)
             uploaded_fingerprint_f = Image.open(uploaded_fingerprint)

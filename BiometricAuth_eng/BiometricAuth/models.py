@@ -80,6 +80,6 @@ class FingerPrintImages(models.Model):
     fingerprint_image = models.ImageField(upload_to=fingerprint_directory_path)
 
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        fp_join_folder(image = self.fingerprint_image, user_id = self.user.id)
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     fp_join_folder(image = self.fingerprint_image, user_id = self.user.id)

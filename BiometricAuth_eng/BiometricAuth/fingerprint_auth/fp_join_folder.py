@@ -5,11 +5,13 @@ import cv2
 from django.conf import settings
 
 import BiometricAuth.models
-from BiometricAuth.utils import check_and_create_folder, get_fingerprint_skelet_path
+from BiometricAuth.utils import check_and_create_folder, get_fingerprint_skelet_path, get_fingerprint_path
 from PIL import Image
 
 def fp_join_folder(image=None, user_id=None):
-    folder = get_fingerprint_skelet_path(user_id)
+    # folder = get_fingerprint_skelet_path(user_id)
+    folder = get_fingerprint_path(user_id)
+
     check_and_create_folder(folder)
 
     jpeg_img = Image.open(image)
