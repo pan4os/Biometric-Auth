@@ -3,7 +3,17 @@
 {% block content %}
     <form method='POST'>
         {% csrf_token %}
-        {{ form }}
-        <button type="submit">Войти</button>
+        <div class="pb-3"></div>
+        {% for field in form %}
+        <div class="col-md-4">
+        {{ field }}
+        <p></p>
+        <p></p>
+    </div>
+        {% endfor %}
+        <p></p>
+        <div class="col-md-6">
+        <button type="submit" class="btn btn-primary">Войти</button>
+    </div>
     </form> 
 {% endblock %}
