@@ -61,7 +61,7 @@
                         <tr>
                             <td> {{ form.fingerprint_image }} </td>
                             <td>
-                            {% if fingerprint_formset.can_delete %}
+                            {% if formsets.fingerprint_formset.can_delete %}
                                 {{ form.DELETE }}
                             {% endif %}
                             </td>

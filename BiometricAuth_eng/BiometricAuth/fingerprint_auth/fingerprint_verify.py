@@ -2,7 +2,7 @@ import cv2
 from PIL import Image
 import numpy as np
 
-from fingerprint_auth.src.FingerPrintComparator import FingerPrintComparator
+from .FingerPrintComparator import FingerPrintComparator
 
 def fingerprint_verify(image1, image2):
 

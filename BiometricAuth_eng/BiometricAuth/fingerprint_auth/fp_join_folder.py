@@ -33,7 +33,7 @@ def fp_join_folder(image=None, user_id=None):
 
 
 def find_deleted_fingerprint(user_id=None):
-    fingerprint_folder_name = 'biometric_data\\user_{}\\fingerprint\\'.format(user_id)
+    fingerprint_folder_name = 'biometric_data/user_{}/fingerprint/'.format(user_id)
     return os.path.join(settings.MEDIA_ROOT, fingerprint_folder_name)
     fingerprint_image = os.listdir(find_deleted_fingerprint(user_id))
     for i in range(len(fingerprint_image)):

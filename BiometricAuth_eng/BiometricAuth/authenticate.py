@@ -49,7 +49,7 @@ class FaceAuthBackend(ModelBackend):
         return False
 
 
-class FingerprintAuthBackend(ModelBackend):
+class FingerPrintAuthBackend(ModelBackend):
     '''
     Проверка пользователя по отпечатку пальца
     '''
@@ -63,8 +63,13 @@ class FingerprintAuthBackend(ModelBackend):
 
     def check_fingerprint(self, user=None, uploaded_fingerprint=None):
         fingerprint_image = os.listdir(get_fingerprint_skelet_path(user.userbiometry.id))
+        print(fingerprint_image)
+        print('Uploaded fingerprint: ', uploaded_fingerprint)
         for i in range(len(fingerprint_image)):
-            folder_path = Image.open(str(get_fingerprint_skelet_path(user.userbiometry.id)) + str(fingerprint_image[i]))
+            print(i, '  from folder:',fingerprint_image[i])
+            folder_path = Image.open(get_fingerprint_skelet_path(user.userbiometry.id) + fingerprint_image[i])
+            # print()
+            # print(folder_path)
             uploaded_fingerprint_f = Image.open(uploaded_fingerprint)
             if fingerprint_verify(uploaded_fingerprint_f, folder_path):
                 return True
