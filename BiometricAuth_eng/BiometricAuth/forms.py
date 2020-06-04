@@ -47,8 +47,8 @@ class IrisImagesForm(forms.ModelForm):
 
 IrisImagesFormset = inlineformset_factory(
     models.UserBiometry,
-    models.IrisImages, 
-    fields=('iris_image',), 
+    models.IrisImages,
+    fields=('iris_image',),
     extra=1,
     can_delete=True
     )
@@ -71,12 +71,36 @@ class FaceImagesForm(forms.ModelForm):
 
 FaceImagesFormset = inlineformset_factory(
     models.UserBiometry,
-    models.FaceImages, 
-    fields=('face_image',), 
+    models.FaceImages,
+    fields=('face_image',),
     extra=1,
     can_delete=True
     )
 
 
 # ------------------- Отпечаток пальца:
-                                           
+class FingerPrintAuth(forms.Form):
+    '''
+    Форма для страницы аутентификации.
+    auth_type нужен для идентификации формы на странице двухфакторной аутентификации
+    '''
+    auth_type = forms.CharField(widget=forms.HiddenInput(), initial='fingerprint')
+    fingerprint_image = forms.ImageField()
+
+class FingerPrintImagesForm(forms.ModelForm):
+    '''
+    Форма для страницы профиля (загрузка изображений в профиль)
+    auth_type нужен для идентификации формы на странице профиля
+    '''
+    # auth_type = forms.CharField(widget=forms.HiddenInput(), initial='iris')
+    class Meta:
+        model = models.FingerPrintImages
+        fields = '__all__'
+
+FingerPrintImagesFormset = inlineformset_factory(
+    models.UserBiometry,
+    models.FingerPrintImages,
+    fields=('fingerprint_image',),
+    extra=1,
+    can_delete=True
+    )

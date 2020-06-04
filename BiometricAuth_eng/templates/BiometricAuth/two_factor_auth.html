@@ -30,4 +30,16 @@
     <button type="submit">Войти</button>
 </form>
 {% endif %}
+{% if user_biometry.fingerprint_photo_counter %}
+        <p>По отпечатку пальца:</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ auth_forms.fingerprint.non_field_errors }}
+            </div>
+            {{ auth_forms.fingerprint.auth_type }}
+            <p>{{ auth_forms.fingerprint.fingerprint_image }}</p>
+            <button type="submit">Войти</button>
+        </form>
+    {% endif %}
 {% endblock %}
